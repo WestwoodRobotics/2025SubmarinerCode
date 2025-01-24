@@ -4,9 +4,20 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.epilogue.*;
+
+
+import javax.xml.crypto.Data;
+
+//import edu.wpi.first.*;
+import edu.wpi.first.epilogue.Logged;
+import edu.wpi.first.util.datalog.DataLog;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -14,10 +25,13 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * the package after creating this project, you must also update the build.gradle file in the
  * project.
  */
+
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
+  private Timer m_timer;
 
   private RobotContainer m_robotContainer;
+  
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -28,6 +42,11 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    m_robotContainer.m_robotDrive.resetGyro();
+    DataLogManager.start();
+    //Epilogue.bind(this);
+    DriverStation.startDataLog(DataLogManager.getLog());
+
   }
 
   /**
@@ -56,6 +75,11 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+    //m_robotContainer.ODCommandFactory.resetTimer();
+    m_robotContainer.m_robotDrive.resetGyro();
+    //m_robotContainer.m_shooter.removeDefaultCommand();
+    //m_robotContainer.ODCommandFactory.startTimer();
+    //m_robotContainer.m_shooter.setDefaultCommand(new shooterPIDCommand(m_robotContainer.m_shooter, 1000));
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     /*
@@ -73,7 +97,9 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    //System.out.println(m_robotContainer.m_robotDrive.getProcessedHeading());
+  }
 
   @Override
   public void teleopInit() {
@@ -81,9 +107,15 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
+    //m_robotContainer.ODCommandFactory.stopTimer();
+
+    //m_robotContainer.m_shooter.removeDefaultCommand();
+    //m_robotContainer.m_shooter.stopShooter();
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    //m_robotContainer.m_robotDrive.resetGyro();
+
   }
 
   /** This function is called periodically during operator control. */
